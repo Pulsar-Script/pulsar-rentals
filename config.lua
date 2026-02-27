@@ -1,10 +1,31 @@
 config = {}
 
--- Target & Inventory rescources
--------------------------------------------------------
 
+-- Discord Webhook Configuration
+config.webhook = {
+    enabled = true, -- true to enable Discord logs, false to disable
+    url = 'https://discord.com/api/webhooks/1477072198119198873/l_ecE9ZtIuVk6dRLTTc_B6D3GiGvutqZpbjuD2BrLRPbosFF2d4cXnlzWSKhH6iudEaV', -- Your Discord webhook URL
+    botName = 'Rentals - Logs', -- Name of the bot in Discord
+    botAvatar = 'https://image.noelshack.com/fichiers/2026/09/5/1772232196-mylogo.jpg', -- Avatar URL for the bot
+    color = 3447003, -- Embed color (decimal format)
+    role = '<@&1462145081803800666>', -- Discord role ID to ping on suspicious activity
+}
+
+-- Target & Inventory rescources
 config.target = 'qb' --  Choose between 'qb' for qb-target | 'ox' for ox-target
-config.inventory = 'qs' -- Choose between 'qs' for qs-inventory | 'ox' for ox-inventory
+config.inventory = 'qs' -- Choose between 'qs' for qs-inventory | 'ox' for ox-inventory | 'qb' for qb-inventory
+config.keys = 'qs' -- Choose between 'qs' for qs-vehiclekeys | 'qb' for qb-vehiclekeys
+
+config.WhitelistVehicles = { -- This list of vehicles won't have keys.
+    'bmx',
+    'cruiser',
+    'enduro',
+    'fixter',
+    'scorcher',
+    'tribike',
+    'tribike2',
+    'tribike3',
+}
 
 -------------------------------------------------------
 
@@ -48,4 +69,6 @@ config.locations = {
 
     -- add as many locations as you'd like with any type of vehicle (air, water, land) follow same format as above
 }
+
+config.debug = true --true if you want debug message or false
 

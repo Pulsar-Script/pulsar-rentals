@@ -31,7 +31,6 @@ dependencies {
 
 optionalDependencies {
     'ox_inventory',
+    'qs-vehiclekeys',
     'qs_inventory',
 }
-
-lua54 'yes'

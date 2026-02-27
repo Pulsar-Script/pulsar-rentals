@@ -111,7 +111,7 @@ RegisterNetEvent('pc-rentals:client:rentVehicle', function(k)
                 })
             end
         end
-    end 
+    end
 
     lib.registerContext({
         id = 'vehicle_rental',
@@ -133,13 +133,32 @@ RegisterNetEvent('pc-rentals:client:SpawnVehicle', function(vehiclename, locatio
     local plate = GetVehicleNumberPlateText(rental)
     SetVehicleOnGroundProperly(rental)
     TaskWarpPedIntoVehicle(player, rental, -1) 
-    SetVehicleEngineOn(vehicle, true, true)
-    TriggerServerEvent('pc-rentals:server:RentVehicle', vehiclename, plate)
+    TriggerServerEvent('pc-rentals:server:RentVehicle', vehiclename, plate, location)
 
     -- give keys 
-    if QBCore then 
-        TriggerEvent("vehiclekeys:client:SetOwner", plate)
+    local needKey = contains(config.WhitelistVehicles, vehiclename)
+    if config.debug then
+        print("Vehicle needs keys: " .. tostring(needKey))
     end
-        
+
+    if needKey == true then
+        if config.keys == 'qs' then
+            exports['qs-vehiclekeys']:GiveKeys(plate, vehiclename, true)
+        elseif config.keys == 'qb' then 
+            TriggerEvent("vehiclekeys:client:SetOwner", plate)
+        end
+    end
+
     SetModelAsNoLongerNeeded(vehicle)
 end)
+
+function contains(table, element)
+    element = string.lower(element)
+    for _, value in ipairs(table) do
+        if string.lower(value) == element then
+            return false
+        end
+    end
+    return true
+end
+

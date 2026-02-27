@@ -13,7 +13,7 @@
 
 **Requires:** ox_lib
 
-**Optional**  ox_inventory | qs-inventory *(Not standalone)*
+**Optional**  ox_inventory | qs-inventory | qb-inventory *(Not standalon)*
 
 **Frameworks:** QB | ESX
 
