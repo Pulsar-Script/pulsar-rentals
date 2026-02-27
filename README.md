@@ -1,8 +1,9 @@
-![solos](https://github.com/SolosV1/solos-rentals/assets/108097907/8e56354b-9ee1-4566-83b1-04619b71fe43)
 
-**Other FiveM Resources** | https://solos.tebex.io/ 
+*Fork of :* | https://github.com/SolosV1/solos-rentals
 
-**Join Discord for support**               | https://discord.gg/UNbCJUrncS
+**Project Chronos Script**
+
+**Join our Discord** | https://discord.gg/f4m6TQRVaj 
 
 # Vehicle Rental 
 - Customize vehicle and pricing options
@@ -11,7 +12,9 @@
 
 # Compatibility
 
-**Requires:** ox_lib | ox_inventory 
+**Requires:** ox_lib
+
+**Optional**  ox_inventory | qs-inventory *(Not standalone)*
 
 **Frameworks:** QB | ESX
 
@@ -19,7 +22,7 @@
 
 # Preview
 
-https://youtu.be/NMyKnpPYqCA 
+https://youtu.be/NMyKnpPYqCA
 
 # Gallery
 
@@ -29,28 +32,14 @@ https://youtu.be/NMyKnpPYqCA
 
 # Installation:
 
-1. add `solos-rentals-main` to your resources folder | Make sure folder is UNZIPPED!
+1. add `pc-rentals` to your resources folder | Make sure folder is UNZIPPED!
 
-2. `ensure solos-rentals` in server.cfg if necessary
+2. `ensure pc-rentals` in server.cfg if necessary
 
 3. Add `Rental Papers` item to inventory:
 
-**Add rentalpapers.png to /ox_inventory/web/images/**
+**Add rentalpapers.png to /ox_inventory/web/images/ or /qs-inventory/html/images/**
 
-In /ox_inventory > /data > items.lua add the following:
-
-```lua
-['rentalpapers'] = {
-    label = "Rental Papers",
-    weight = 0,
-    stack = false,
-    close = false,
-    description = "Rental Papers",
-    client = {
-        image = "rentalpapers.png",
-    },
-},
-```
 4. Restart server
 
 5. Enjoy!

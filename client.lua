@@ -22,7 +22,7 @@ Citizen.CreateThread(function()
         end 
 
         if not v.ped then 
-            if config.qbtarget then 
+            if config.target == 'qb' then 
                 exports['qb-target']:AddBoxZone(k, v.coords, v.length, v.width, {
                     name = k,
                     heading = v.coords.w,
@@ -35,21 +35,21 @@ Citizen.CreateThread(function()
                             icon = 'fas fa-car',
                             label = 'Rent Vehicle',
                             action = function()
-                                TriggerEvent('solos-rentals:client:rentVehicle', k)
+                                TriggerEvent('pc-rentals:client:rentVehicle', k)
                             end
 
                         },
                     },
                     distance = 2.0
                 })
-            elseif config.oxtarget then 
+            elseif config.target == 'ox' then 
                 local menu_options = {
                     {
                         name = 'rental_ped',
                         icon = 'fas fa-car',
                         label = 'Rent Vehicle',
                         onSelect = function()
-                            TriggerEvent('solos-rentals:client:rentVehicle', k)
+                            TriggerEvent('pc-rentals:client:rentVehicle', k)
                         end
                     },
                 }
@@ -62,27 +62,27 @@ Citizen.CreateThread(function()
                 })
             end
         else 
-            if config.qbtarget then 
+            if config.target == 'qb' then 
                 exports['qb-target']:AddTargetEntity(ped[k], {
                     options = {
                         {
                             icon = 'fas fa-car',
                             label = 'Rent Vehicle',
                             action = function()
-                                TriggerEvent('solos-rentals:client:rentVehicle', k)
+                                TriggerEvent('pc-rentals:client:rentVehicle', k)
                             end,
                         },
                     },
                     distance = 2.0
                 })
-            elseif config.oxtarget then 
+            elseif config.target == 'ox' then 
                 local options = {
                     {
                         name = 'rental_ped',
                         icon = 'fas fa-car',
                         label = 'Rent Vehicle',
                         onSelect = function()
-                            TriggerEvent('solos-rentals:client:rentVehicle', k)
+                            TriggerEvent('pc-rentals:client:rentVehicle', k)
                         end
                     },
                 }
@@ -94,7 +94,7 @@ Citizen.CreateThread(function()
         
 end)
 
-RegisterNetEvent('solos-rentals:client:rentVehicle', function(k)
+RegisterNetEvent('pc-rentals:client:rentVehicle', function(k)
 
     local menu_options = {}
 
@@ -106,7 +106,7 @@ RegisterNetEvent('solos-rentals:client:rentVehicle', function(k)
                     image = details.image,
                     description = '$' .. details.price,
                     onSelect = function()
-                        TriggerServerEvent('solos-rentals:server:MoneyAmounts', vehicle, details.price, location)
+                        TriggerServerEvent('pc-rentals:server:MoneyAmounts', vehicle, details.price, location)
                     end
                 })
             end
@@ -122,7 +122,7 @@ RegisterNetEvent('solos-rentals:client:rentVehicle', function(k)
     lib.showContext('vehicle_rental')
 end)
 
-RegisterNetEvent('solos-rentals:client:SpawnVehicle', function(vehiclename, location)
+RegisterNetEvent('pc-rentals:client:SpawnVehicle', function(vehiclename, location)
     local player = PlayerPedId()
     local vehicle = GetHashKey(vehiclename)
     RequestModel(vehicle)
@@ -134,7 +134,7 @@ RegisterNetEvent('solos-rentals:client:SpawnVehicle', function(vehiclename, loca
     SetVehicleOnGroundProperly(rental)
     TaskWarpPedIntoVehicle(player, rental, -1) 
     SetVehicleEngineOn(vehicle, true, true)
-    TriggerServerEvent('solos-rentals:server:RentVehicle', vehiclename, plate)
+    TriggerServerEvent('pc-rentals:server:RentVehicle', vehiclename, plate)
 
     -- give keys 
     if QBCore then 

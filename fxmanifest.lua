@@ -1,8 +1,8 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'Solos#7777'
-description 'solos-rentals'
+author 'Flitcher'
+description 'A vehicle rental script'
 version '1.0.0'
 
 
@@ -26,8 +26,12 @@ escrow_ignore {
 }
 
 dependencies {
-    'ox_inventory',
     'ox_lib',
+}
+
+optionalDependencies {
+    'ox_inventory',
+    'qs_inventory',
 }
 
 lua54 'yes'

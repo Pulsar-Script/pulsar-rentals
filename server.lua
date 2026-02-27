@@ -19,16 +19,18 @@ local function PlayerName(src)
     end
 end
 
-RegisterNetEvent('solos-rentals:server:RentVehicle', function(vehicle, plate)
+RegisterNetEvent('pc-rentals:server:RentVehicle', function(vehicle, plate)
     local src = source
     local player_name = PlayerName(src)
-    exports.ox_inventory:AddItem(src, 'rentalpapers', 1, 
-        {description = 'Owner: '..player_name..' | Plate: '..plate..' | Vehicle: '..vehicle:gsub("^%l", string.upper)}
-    )
-
+    local itemMetadata = { description = 'Proprietaire: '..player_name..' | Plaque: '..plate..' | Vehicle: '..vehicle:gsub("^%l", string.upper) }
+    if config.inventory == 'ox' then
+        exports.ox_inventory:AddItem(src, 'rentalpapers', 1, itemMetadata )
+    elseif config.inventory == 'qs' then
+        exports['qs-inventory']:AddItem(src, 'rentalpapers', 1, nil , itemMetadata)
+    end
 end)
 
-RegisterNetEvent('solos-rentals:server:MoneyAmounts', function(vehiclename, price, location)
+RegisterNetEvent('pc-rentals:server:MoneyAmounts', function(vehiclename, price, location)
     local src = source
     local moneytype = 'bank'
     local price = tonumber(price)
@@ -76,5 +78,5 @@ RegisterNetEvent('solos-rentals:server:MoneyAmounts', function(vehiclename, pric
         icon = 'car',
         iconColor = 'white'
     })
-    TriggerClientEvent('solos-rentals:client:SpawnVehicle', src, vehiclename, location)
+    TriggerClientEvent('pc-rentals:client:SpawnVehicle', src, vehiclename, location)
 end)

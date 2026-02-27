@@ -1,0 +1,28 @@
+For ox-inventory add this :
+	--pc-rentals
+	['rentalpapers'] = {
+		label = "Rental Papers",
+		weight = 0,
+		stack = false,
+		close = false,
+		description = "Rental Papers",
+		client = {
+			image = "rentalpapers.png",
+		},
+	},
+
+For qs-inventroy add this : 
+
+	--pc-rentals
+	['rentalpapers'] = {
+		['name'] = 'rentalpapers',
+		['label'] = 'Documents de location',
+		['weight'] = 0,
+		['type'] = 'item',
+		['image'] = 'rentalpapers.png',
+		['unique'] = true,
+		['useable'] = false,
+		['shouldClose'] = false,
+		['combinable'] = nil,
+		['description'] = 'Documents pour la location de véhicule'
+	},
