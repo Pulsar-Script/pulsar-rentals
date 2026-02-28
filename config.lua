@@ -8,7 +8,7 @@ config.webhook = {
     botName = 'Rentals - Logs', -- Name of the bot in Discord
     botAvatar = 'https://image.noelshack.com/fichiers/2026/09/5/1772232196-mylogo.jpg', -- Avatar URL for the bot
     color = 3447003, -- Embed color (decimal format)
-    role = '<@&ID_ROLE>', -- Discord role ID to ping on suspicious activity
+    role = '<@&YOUR_ROLE_ID_HERE>', -- Discord role ID to ping on suspicious activity
 }
 
 -- Target & Inventory rescources

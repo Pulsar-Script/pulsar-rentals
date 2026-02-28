@@ -185,7 +185,7 @@ RegisterNetEvent('pc-rentals:server:RentVehicle', function(vehicle, plateString,
     local locationCoords = config.locations[location].coords
     local distance = #(playerCoords - vector3(locationCoords.x, locationCoords.y, locationCoords.z))
     
-    if distance > 3 then
+    if distance > 10 then
         if config.debug then
             print("Player " .. player_name .. " (ID: " .. src .. ") attempted to rent vehicle from distance: " .. string.format("%.2f", distance) .. "m at location: " .. location)
         end
