@@ -4,11 +4,11 @@ config = {}
 -- Discord Webhook Configuration
 config.webhook = {
     enabled = true, -- true to enable Discord logs, false to disable
-    url = 'https://discord.com/api/webhooks/1477072198119198873/l_ecE9ZtIuVk6dRLTTc_B6D3GiGvutqZpbjuD2BrLRPbosFF2d4cXnlzWSKhH6iudEaV', -- Your Discord webhook URL
+    url = 'YOUR_URL_WEBHOOK_HERE', -- Your Discord webhook URL
     botName = 'Rentals - Logs', -- Name of the bot in Discord
     botAvatar = 'https://image.noelshack.com/fichiers/2026/09/5/1772232196-mylogo.jpg', -- Avatar URL for the bot
     color = 3447003, -- Embed color (decimal format)
-    role = '<@&1462145081803800666>', -- Discord role ID to ping on suspicious activity
+    role = '<@&ID_ROLE>', -- Discord role ID to ping on suspicious activity
 }
 
 -- Target & Inventory rescources
