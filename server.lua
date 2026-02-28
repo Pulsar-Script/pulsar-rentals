@@ -1,6 +1,52 @@
 local QBCore = GetResourceState('qb-core') == 'started' and exports['qb-core']:GetCoreObject()
 local ESX = GetResourceState('es_extended') == 'started' and exports.es_extended:getSharedObject()
 
+-- Rental verification tokens (stored temporarily)
+local rentalTokens = {}
+
+-- Generate secure token
+local function GenerateToken(src, vehiclename, location, price)
+    local token = math.random(100000, 999999) .. os.time() .. src
+    rentalTokens[token] = {
+        src = src,
+        vehiclename = vehiclename,
+        location = location,
+        price = price,
+        timestamp = os.time()
+    }
+    
+    -- Token expires after 5 minutes
+    SetTimeout(300000, function()
+        if rentalTokens[token] then
+            rentalTokens[token] = nil
+            if config.debug then
+                print("Token " .. token .. " expired")
+            end
+        end
+    end)
+    
+    return token
+end
+
+-- Verify and consume token
+local function VerifyToken(src, token)
+    if not rentalTokens[token] then
+        return false, "Invalid token"
+    end
+    
+    local data = rentalTokens[token]
+    
+    -- Verify owner
+    if data.src ~= src then
+        rentalTokens[token] = nil
+        return false, "Token mismatch"
+    end
+    
+    -- Token valid, consume it
+    rentalTokens[token] = nil
+    return true, data
+end
+
 -- Discord Webhook Function
 local function SendDiscordLog(playerName, playerId, vehicleModel, plate, amount, locationName, isAlert, alertType)
     if not config.webhook.enabled then return end
@@ -21,6 +67,12 @@ local function SendDiscordLog(playerName, playerId, vehicleModel, plate, amount,
         elseif alertType == "distance" then
             title = "⚠️ SUSPICIOUS ACTIVITY - Distance Alert"
             description = "A player attempted to rent a vehicle from too far away!"
+        elseif alertType == "invalid_token" then
+            title = "⚠️ SUSPICIOUS ACTIVITY - Invalid Token"
+            description = "A player attempted to rent with an invalid or expired token!"
+        elseif alertType == "invalid_selection" then
+            title = "⚠️ SUSPICIOUS ACTIVITY - Invalid Vehicle Selection"
+            description = "A player attempted to select a vehicle that doesn't exist in config!"
         end
     end
 
@@ -88,10 +140,20 @@ local function PlayerName(src)
     end
 end
 
-RegisterNetEvent('pc-rentals:server:RentVehicle', function(vehicle, plateString, location)
+RegisterNetEvent('pc-rentals:server:RentVehicle', function(vehicle, plateString, location, token)
     local src = source
     local player_name = PlayerName(src)
     local Player = QBCore.Functions.GetPlayer(src)
+
+    -- Verify token
+    local isValid, tokenData = VerifyToken(src, token)
+    if not isValid then
+        if config.debug then
+            print("^1[ERROR] Player " .. player_name .. " (ID: " .. src .. ") failed token verification: " .. (tokenData or "unknown") .. "^0")
+        end
+        SendDiscordLog(player_name, src, vehicle, plateString, 0, location or "unknown", true, "invalid_token")
+        return
+    end
 
     local itemMetadata = {}
     itemMetadata.owner = player_name
@@ -100,11 +162,10 @@ RegisterNetEvent('pc-rentals:server:RentVehicle', function(vehicle, plateString,
     itemMetadata.type = "Owner: "..player_name.." | Plate: "..plateString.." | Model: "..vehicle
     
     -- Get price from config (server-side security)
-    local price = 1000
+    local price = tokenData.price
     local isValidVehicle = false
     
     if location and config.locations[location] and config.locations[location].vehicles[vehicle] then
-        price = config.locations[location].vehicles[vehicle].price
         isValidVehicle = true
     end
     
@@ -124,7 +185,7 @@ RegisterNetEvent('pc-rentals:server:RentVehicle', function(vehicle, plateString,
     local locationCoords = config.locations[location].coords
     local distance = #(playerCoords - vector3(locationCoords.x, locationCoords.y, locationCoords.z))
     
-    if distance > 25 then
+    if distance > 3 then
         if config.debug then
             print("Player " .. player_name .. " (ID: " .. src .. ") attempted to rent vehicle from distance: " .. string.format("%.2f", distance) .. "m at location: " .. location)
         end
@@ -157,12 +218,25 @@ RegisterNetEvent('pc-rentals:server:RentVehicle', function(vehicle, plateString,
     end
 end)
 
-RegisterNetEvent('pc-rentals:server:MoneyAmounts', function(vehiclename, price, location)
+RegisterNetEvent('pc-rentals:server:SelectVehicle', function(vehiclename, location)
     local src = source
+    
+    -- Validate vehicle exists in config
+    if not location or not config.locations[location] or not config.locations[location].vehicles[vehiclename] then
+        if config.debug then
+            local player_name = PlayerName(src)
+            print(" Player " .. player_name .. " (ID: " .. src .. ") attempted to select invalid vehicle: " .. vehiclename)
+        end
+        -- Send alert to Discord
+        SendDiscordLog(PlayerName(src), src, vehiclename, "N/A", 0, location or "unknown", true, "invalid_selection")
+        return
+    end
+    
+    local price = config.locations[location].vehicles[vehiclename].price
     local moneytype = 'bank'
-    local price = tonumber(price)
     local bank 
     local cash
+    
     if QBCore then 
         local Player = QBCore.Functions.GetPlayer(src)
         bank = Player.PlayerData.money.bank
@@ -198,6 +272,10 @@ RegisterNetEvent('pc-rentals:server:MoneyAmounts', function(vehiclename, price, 
             Player.removeAccountMoney('bank', price)
         end
     end
+    
+    -- Generate verification token
+    local token = GenerateToken(src, vehiclename, location, price)
+    
     TriggerClientEvent('ox_lib:notify', src, {
         id = 'rental_success',
         description = vehiclename:gsub("^%l", string.upper)..' rented for $'..price..'.',
@@ -206,5 +284,9 @@ RegisterNetEvent('pc-rentals:server:MoneyAmounts', function(vehiclename, price, 
         iconColor = 'white'
     })
     
-    TriggerClientEvent('pc-rentals:client:SpawnVehicle', src, vehiclename, location)
+    if config.debug then
+        print("Generated rental token for player " .. src .. ": " .. token)
+    end
+    
+    TriggerClientEvent('pc-rentals:client:SpawnVehicle', src, vehiclename, location, token)
 end)

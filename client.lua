@@ -106,7 +106,7 @@ RegisterNetEvent('pc-rentals:client:rentVehicle', function(k)
                     image = details.image,
                     description = '$' .. details.price,
                     onSelect = function()
-                        TriggerServerEvent('pc-rentals:server:MoneyAmounts', vehicle, details.price, location)
+                        TriggerServerEvent('pc-rentals:server:SelectVehicle', vehicle, location)
                     end
                 })
             end
@@ -122,7 +122,7 @@ RegisterNetEvent('pc-rentals:client:rentVehicle', function(k)
     lib.showContext('vehicle_rental')
 end)
 
-RegisterNetEvent('pc-rentals:client:SpawnVehicle', function(vehiclename, location)
+RegisterNetEvent('pc-rentals:client:SpawnVehicle', function(vehiclename, location, token)
     local player = PlayerPedId()
     local vehicle = GetHashKey(vehiclename)
     RequestModel(vehicle)
@@ -133,7 +133,7 @@ RegisterNetEvent('pc-rentals:client:SpawnVehicle', function(vehiclename, locatio
     local plate = GetVehicleNumberPlateText(rental)
     SetVehicleOnGroundProperly(rental)
     TaskWarpPedIntoVehicle(player, rental, -1) 
-    TriggerServerEvent('pc-rentals:server:RentVehicle', vehiclename, plate, location)
+    TriggerServerEvent('pc-rentals:server:RentVehicle', vehiclename, plate, location, token)
 
     -- give keys 
     local needKey = contains(config.WhitelistVehicles, vehiclename)

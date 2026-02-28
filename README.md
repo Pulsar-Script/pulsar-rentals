@@ -9,8 +9,10 @@
 - Add as many locations as you'd like (Each location can have different vehicles)
 - Players receive rental papers with meta data displaying renter's name, vehicle, and licence plate
 - **NEW:** Discord webhook integration for rental logs
-- **NEW:** Advanced anti-cheat system with distance verification
+- **NEW:** Advanced anti-cheat system with token verification
+- **NEW:** Distance verification (25-meter radius)
 - **NEW:** Automatic alerts for suspicious activities
+- **NEW:** Token-based transaction security system
 
 ## Compatibility
 
@@ -47,11 +49,26 @@ https://youtu.be/NMyKnpPYqCA
 5. Enjoy!
 ## Discord Webhook Configuration
 
+Configure Discord logs in `config.lua`:
+
+```lua
+config.webhook = {
+    enabled = true, -- Enable/disable Discord logs
+    url = 'YOUR_WEBHOOK_URL', -- Your Discord webhook URL
+    botName = 'Rentals - Logs', -- Bot name in Discord
+    botAvatar = 'AVATAR_URL', -- Bot avatar URL
+    color = 3447003, -- Embed color (decimal)
+    role = '<@&ROLE_ID>', -- Role to ping on alerts (format: <@&ROLE_ID>)
+}
+```
+
 ### Features:
 - **Normal Logs** (Blue embed): Player name, ID, vehicle model, plate, amount, location
 - **Security Alerts** (Red embed with role ping):
   - Unauthorized vehicle detection
   - Distance validation (player must be within 25 meters of rental location)
+  - Invalid token detection
+  - Invalid vehicle selection attempts
   
 ### How to get your Discord Webhook URL:
 1. Go to Server Settings → Integrations → Webhooks
@@ -66,8 +83,28 @@ https://youtu.be/NMyKnpPYqCA
 
 ## Security Features
 
+### Token-Based Verification System
+- **Unique token generation** for each transaction
+- **Token expires after 5 minutes** (prevents replay attacks)
+- **Single-use tokens** (consumed after one use)
+- **Player-bound tokens** (cannot be transferred between players)
+- **Server-side validation** (impossible to bypass)
+
+### Anti-Cheat Protection
 - ✅ Server-side price validation (prevents price manipulation)
 - ✅ Vehicle authorization check (only configured vehicles can be rented)
 - ✅ Distance verification (25-meter radius from rental location)
+- ✅ Token verification system (prevents unauthorized spawning)
+- ✅ Invalid vehicle selection detection
 - ✅ Real-time Discord alerts for suspicious activities
 - ✅ Comprehensive logging system
+
+### How It Works
+1. Player selects vehicle → Server validates vehicle exists in config
+2. Server deducts money using **config price only** (client price ignored)
+3. Server generates **unique token** with transaction data
+4. Client receives token and spawns vehicle
+5. Server **validates token** before confirming rental
+6. Token is **consumed** (cannot be reused)
+
+**Result:** Complete protection against cheaters trying to manipulate prices, spawn unauthorized vehicles, or bypass payment systems.
