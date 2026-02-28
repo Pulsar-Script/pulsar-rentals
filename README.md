@@ -8,6 +8,9 @@
 - Customize vehicle and pricing options
 - Add as many locations as you'd like (Each location can have different vehicles)
 - Players receive rental papers with meta data displaying renter's name, vehicle, and licence plate
+- **NEW:** Discord webhook integration for rental logs
+- **NEW:** Advanced anti-cheat system with distance verification
+- **NEW:** Automatic alerts for suspicious activities
 
 ## Compatibility
 
@@ -42,3 +45,29 @@ https://youtu.be/NMyKnpPYqCA
 4. Restart server
 
 5. Enjoy!
+## Discord Webhook Configuration
+
+### Features:
+- **Normal Logs** (Blue embed): Player name, ID, vehicle model, plate, amount, location
+- **Security Alerts** (Red embed with role ping):
+  - Unauthorized vehicle detection
+  - Distance validation (player must be within 25 meters of rental location)
+  
+### How to get your Discord Webhook URL:
+1. Go to Server Settings → Integrations → Webhooks
+2. Create a new webhook
+3. Copy the webhook URL
+4. Paste it in `config.webhook.url`
+
+### How to get your Role ID:
+1. Enable Developer Mode in Discord (User Settings → Advanced)
+2. Right-click on the role → Copy ID
+3. Format it as `<@&ROLE_ID>` in config
+
+## Security Features
+
+- ✅ Server-side price validation (prevents price manipulation)
+- ✅ Vehicle authorization check (only configured vehicles can be rented)
+- ✅ Distance verification (25-meter radius from rental location)
+- ✅ Real-time Discord alerts for suspicious activities
+- ✅ Comprehensive logging system
