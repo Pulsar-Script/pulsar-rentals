@@ -140,7 +140,7 @@ local function PlayerName(src)
     end
 end
 
-RegisterNetEvent('pc-rentals:server:RentVehicle', function(vehicle, plateString, location, token)
+RegisterNetEvent('pulsar-rentals:server:RentVehicle', function(vehicle, plateString, location, token)
     local src = source
     local player_name = PlayerName(src)
     local Player = QBCore.Functions.GetPlayer(src)
@@ -218,7 +218,7 @@ RegisterNetEvent('pc-rentals:server:RentVehicle', function(vehicle, plateString,
     end
 end)
 
-RegisterNetEvent('pc-rentals:server:SelectVehicle', function(vehiclename, location)
+RegisterNetEvent('pulsar-rentals:server:SelectVehicle', function(vehiclename, location)
     local src = source
     
     -- Validate vehicle exists in config
@@ -288,5 +288,5 @@ RegisterNetEvent('pc-rentals:server:SelectVehicle', function(vehiclename, locati
         print("Generated rental token for player " .. src .. ": " .. token)
     end
     
-    TriggerClientEvent('pc-rentals:client:SpawnVehicle', src, vehiclename, location, token)
+    TriggerClientEvent('pulsar-rentals:client:SpawnVehicle', src, vehiclename, location, token)
 end)

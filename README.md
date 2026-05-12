@@ -1,8 +1,6 @@
-# Project Chronos Script
+# Pulsar Script
 
 *Fork of :* | https://github.com/SolosV1/solos-rentals
-
-**Join our Discord** | https://discord.gg/f4m6TQRVaj 
 
 ## Vehicle Rental 
 - Customize vehicle and pricing options

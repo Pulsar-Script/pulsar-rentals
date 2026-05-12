@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'Flitcher'
+author 'Pulsar'
 description 'A vehicle rental script'
 version '1.0.0'
 
